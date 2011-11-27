@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -31,9 +32,18 @@ public class Autoenchanter extends JavaPlugin {
 
     public void onEnable() {
     	this.getDataFolder().mkdirs();
+    	File f = new File(this.getDataFolder(),"config.yml");
+    	try {
+			f.createNewFile();
+		} catch (IOException e1) {
+    		System.out.println(this + ": Error creating configuration file");
+    		return;
+		}
+    	
+
     	config = new YamlConfiguration();
     	try {
-			config.load(new File(this.getDataFolder(),"Config.yml"));
+			config.load(f);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,24 +64,32 @@ public class Autoenchanter extends JavaPlugin {
     		{
     			if(event.isCancelled())
     				return;
-    			if(!config.isConfigurationSection(event.getBlock().getType().toString()))
+    			ItemStack item = event.getPlayer().getItemInHand();
+    			System.out.println(this + " fired event!");
+    			if(!config.isConfigurationSection(item.getType().toString()))
+    			{
+    				System.out.println(this + "Not found "+item.getType().toString());
     				return;
+    			}
     			
-				ConfigurationSection c = config.getConfigurationSection(event.getBlock().getType().toString());
-				
-				if(!config.isConfigurationSection(BlockBreakEvent.class.getSimpleName()))
+				ConfigurationSection c = config.getConfigurationSection(item.getType().toString());
+				System.out.println(this + " found block definition");
+				if(!c.isConfigurationSection(BlockBreakEvent.class.getSimpleName()))
 					return;
 				
-				ConfigurationSection subc = config.getConfigurationSection(BlockBreakEvent.class.getSimpleName());
+				ConfigurationSection subc = c.getConfigurationSection(BlockBreakEvent.class.getSimpleName());
+				
+				System.out.println(this + " found event listener!");
+				
 				int maxlevel = subc.getInt("MaxLevel", 1);
 				Double rate = subc.getDouble("Rate",0.1);
 				Double levelratefactor = subc.getDouble("LevelRateFactor",1);
 				Double levelup = subc.getDouble("LevelupRequirement",10);
-				ItemStack item = event.getPlayer().getItemInHand();
+				
 				String EnchantName = subc.getString("Enchant");
 				if(EnchantName == null)
 					return;
-				
+				System.out.println(this + " We have a working event!");
 				Enchantment e = Enchantment.getByName(EnchantName);
 				
 				if(item.getEnchantmentLevel(e) >= maxlevel)
