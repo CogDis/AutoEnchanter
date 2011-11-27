@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -65,8 +66,12 @@ public class Autoenchanter extends JavaPlugin {
 				int maxlevel = subc.getInt("MaxLevel", 1);
 				Double rate = subc.getDouble("Rate",0.1);
 				Double levelratefactor = subc.getDouble("LevelRateFactor",1);
+				Double levelup = subc.getDouble("LevelupRequirement",10);
 				ItemStack item = event.getPlayer().getItemInHand();
 				String EnchantName = subc.getString("Enchant");
+				if(EnchantName == null)
+					return;
+				
 				Enchantment e = Enchantment.getByName(EnchantName);
 				
 				if(item.getEnchantmentLevel(e) >= maxlevel)
@@ -78,9 +83,19 @@ public class Autoenchanter extends JavaPlugin {
 				if(!trackedItems.get(event.getPlayer()).containsKey(item))
 					trackedItems.get(event.getPlayer()).put(item, new Double(0.0));
 				
-				
-				
-				//.addEnchantment(e, 1);
+				Double trackedlevel = trackedItems.get(event.getPlayer()).get(item);
+				Double newlevel = new Double(trackedlevel + rate/(levelratefactor));
+				if(newlevel >= levelup)
+				{
+					trackedItems.get(event.getPlayer()).remove(item);
+					item.addEnchantment(e, item.getEnchantmentLevel(e) + 1);
+					trackedItems.get(event.getPlayer()).put(item, new Double(0.0));
+					event.getPlayer().sendMessage(ChatColor.GREEN + "Congrats you have leveled up an Item!");
+				}
+				else
+				{
+					trackedItems.get(event.getPlayer()).put(item, newlevel);
+				}
     		}
     	}, Priority.Monitor,this);
     	
