@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.precipicegames.autoenchanter.listeners.BlockLstn;
+import com.precipicegames.autoenchanter.listeners.EntityLstn;
 import com.precipicegames.autoenchanter.listeners.PlayerLstn;
 
 public class Autoenchanter extends JavaPlugin{
@@ -63,9 +64,11 @@ public class Autoenchanter extends JavaPlugin{
 		//Register Block break event
 		Listener block = new BlockLstn(this);
 		Listener plListen = new PlayerLstn(this);
+		Listener eListen = new EntityLstn(this);
     	this.getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, block , Priority.Monitor,this);
     	this.getServer().getPluginManager().registerEvent(Type.BLOCK_PLACE, block , Priority.Monitor,this);
-    	this.getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, plListen , Priority.Monitor,this);
+    	//this.getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, plListen , Priority.Monitor,this);
+    	this.getServer().getPluginManager().registerEvent(Type.ENTITY_DAMAGE, eListen , Priority.Monitor,this);
     	this.getServer().getPluginManager().registerEvent(Type.PLAYER_PICKUP_ITEM, plListen , Priority.Monitor,this);
     	this.getServer().getPluginManager().registerEvent(Type.PLAYER_FISH, plListen , Priority.Monitor,this);
     	
@@ -102,13 +105,17 @@ public class Autoenchanter extends JavaPlugin{
 		Double levelcurvefactor = subc.getDouble("levelCurveFactor",2);
 		Double levelup = subc.getDouble("levelRequirement",10);
 		
-		EnchantName.length();
-		System.out.println(this + " We have a working event!");
+		
+		System.out.println(this + " We have a working event!\n" + rate);
+		System.out.println(levelratefactor);
+		System.out.println(levelcurvefactor);
+		System.out.println(levelup);
+		System.out.println(maxlevel);
 		
 		
 		if(item.get().getEnchantmentLevel(e) >= maxlevel)
 			return;
-		
+
 		if(!trackedItems.containsKey(player))
 			trackedItems.put(player, new ItemStatus());
 		
@@ -119,18 +126,22 @@ public class Autoenchanter extends JavaPlugin{
 			trackedItems.get(player).get(item).put(e, new Double(0.0));
 		
 		Double trackedlevel = trackedItems.get(player).get(item).get(e);
-		double lvl = item.get().getEnchantmentLevel(e);
-		Double newlevel = new Double(trackedlevel + rate - (rate * (rate*lvl)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl)));
+		//double lvl = item.get().getEnchantmentLevel(e);
+		//double newlevel = new Double(trackedlevel + rate - (rate * ((rate*lvl+1)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl+1))));
+		Double newlevel = new Double(trackedlevel + rate);
+		System.out.println("old level: " + trackedlevel + " new level: " + newlevel);
 		if(newlevel >= levelup)
 		{
 			trackedItems.get(player).get(item).remove(e);
 			item.get().addEnchantment(e, item.get().getEnchantmentLevel(e) + 1);
-			trackedItems.get(player).get(item).put(e , new Double(0.0));
+			//trackedItems.get(player).get(item).put(e , new Double(0.0));
 			player.sendMessage(ChatColor.GREEN + "Congrats you have leveled up an Item!");
 		}
 		else
 		{
 			trackedItems.get(player).get(item).put(e, newlevel);
+			System.out.println("saved level: " + trackedItems.get(player).get(item).get(e));
+			System.out.println("amount of items: " + trackedItems.get(player).size() + " hashcode: " + item.hashCode());
 		}
 		return;
     }

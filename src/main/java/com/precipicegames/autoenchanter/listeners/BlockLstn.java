@@ -20,6 +20,8 @@ public class BlockLstn extends BlockListener {
 		if(event.isCancelled())
 			return;
 		ConfigurationSection subc = this.plugin.basicConfigurationHandler("BlockBreakEvent", event.getPlayer(), event.getPlayer().getItemInHand().getType());
+		if(subc == null)
+			return;
 		ConfigurationSection extended = subc.getConfigurationSection(event.getBlock().getType().toString());
 		if(extended != null)	
 		{

@@ -17,6 +17,7 @@ public class PlayerLstn extends PlayerListener {
 	{
 		plugin = p;
 	}
+	/*
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		ConfigurationSection c = plugin.basicConfigurationHandler("PlayerInteractEvent", event.getPlayer(), event.getPlayer().getItemInHand().getType());
@@ -53,6 +54,6 @@ public class PlayerLstn extends PlayerListener {
 	{
 		ConfigurationSection c = plugin.basicConfigurationHandler("PlayerFishEvent", event.getPlayer(), event.getPlayer().getItemInHand().getType());
 		plugin.basicActionHandler(c, event.getPlayer(), event.getPlayer().getItemInHand());
-	}
+	}*/
 	
 }

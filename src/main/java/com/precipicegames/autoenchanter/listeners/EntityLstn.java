@@ -12,7 +12,7 @@ import com.precipicegames.autoenchanter.Autoenchanter;
 public class EntityLstn extends EntityListener {
 	private Autoenchanter plugin;
 
-	EntityLstn(Autoenchanter p)
+	public EntityLstn(Autoenchanter p)
 	{
 		plugin = p;
 	}
