@@ -91,6 +91,8 @@ public class Autoenchanter extends JavaPlugin{
     
     public void basicActionHandler(ConfigurationSection subc, Player player, ItemStack I)
     {
+    	if(subc == null)
+    		return;
 		UniqueItem item = new UniqueItem(I);
 		String EnchantName = subc.getString("enchant");
 		if(EnchantName == null)
@@ -126,11 +128,11 @@ public class Autoenchanter extends JavaPlugin{
 			trackedItems.get(player).get(item).put(e, new Double(0.0));
 		
 		Double trackedlevel = trackedItems.get(player).get(item).get(e);
-		//double lvl = item.get().getEnchantmentLevel(e);
+		double lvl = item.get().getEnchantmentLevel(e);
 		//double newlevel = new Double(trackedlevel + rate - (rate * ((rate*lvl+1)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl+1))));
 		Double newlevel = new Double(trackedlevel + rate);
 		System.out.println("old level: " + trackedlevel + " new level: " + newlevel);
-		if(newlevel >= levelup)
+		if(newlevel >= levelup + Math.pow(lvl,levelcurvefactor)*levelratefactor)
 		{
 			trackedItems.get(player).get(item).remove(e);
 			item.get().addEnchantment(e, item.get().getEnchantmentLevel(e) + 1);
