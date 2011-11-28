@@ -89,17 +89,22 @@ public class Autoenchanter extends JavaPlugin{
     public void basicActionHandler(ConfigurationSection subc, Player player, ItemStack I)
     {
 		UniqueItem item = new UniqueItem(I);
-		int maxlevel = subc.getInt("MaxLevel", 1);
-		Double rate = subc.getDouble("Rate",0.1);
-		Double levelratefactor = subc.getDouble("LevelRateFactor",1);
-		Double levelup = subc.getDouble("LevelupRequirement",10);
-		
-		String EnchantName = subc.getString("Enchant");
+		String EnchantName = subc.getString("enchant");
 		if(EnchantName == null)
 			return;
+		Enchantment e = Enchantment.getByName(EnchantName);
+		if(e == null)
+			return;
+		
+		int maxlevel = subc.getInt("maxLevel", e.getMaxLevel());
+		Double rate = subc.getDouble("rate",0.1);
+		Double levelratefactor = subc.getDouble("levelFactor",0.1);
+		Double levelcurvefactor = subc.getDouble("levelCurveFactor",2);
+		Double levelup = subc.getDouble("levelRequirement",10);
+		
 		EnchantName.length();
 		System.out.println(this + " We have a working event!");
-		Enchantment e = Enchantment.getByName(EnchantName);
+		
 		
 		if(item.get().getEnchantmentLevel(e) >= maxlevel)
 			return;
@@ -108,20 +113,24 @@ public class Autoenchanter extends JavaPlugin{
 			trackedItems.put(player, new ItemStatus());
 		
 		if(!trackedItems.get(player).containsKey(item))
-			trackedItems.get(player).put(item, new Double(0.0));
+			trackedItems.get(player).put(item, new EnchantDetails());
 		
-		Double trackedlevel = trackedItems.get(player).get(item);
-		Double newlevel = new Double(trackedlevel + rate/(levelratefactor));
+		if(!trackedItems.get(player).get(item).containsKey(e))
+			trackedItems.get(player).get(item).put(e, new Double(0.0));
+		
+		Double trackedlevel = trackedItems.get(player).get(item).get(e);
+		double lvl = item.get().getEnchantmentLevel(e);
+		Double newlevel = new Double(trackedlevel + rate - (rate * (rate*lvl)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl)));
 		if(newlevel >= levelup)
 		{
-			trackedItems.get(player).remove(item);
+			trackedItems.get(player).get(item).remove(e);
 			item.get().addEnchantment(e, item.get().getEnchantmentLevel(e) + 1);
-			trackedItems.get(player).put(item, new Double(0.0));
+			trackedItems.get(player).get(item).put(e , new Double(0.0));
 			player.sendMessage(ChatColor.GREEN + "Congrats you have leveled up an Item!");
 		}
 		else
 		{
-			trackedItems.get(player).put(item, newlevel);
+			trackedItems.get(player).get(item).put(e, newlevel);
 		}
 		return;
     }
