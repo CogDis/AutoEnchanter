@@ -2,6 +2,7 @@ package com.precipicegames.autoenchanter;
 
 import java.util.HashMap;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class UniqueItem {
@@ -15,6 +16,11 @@ public class UniqueItem {
 
         hash = hash * 19 + 7 * stack.getTypeId(); // Overriding hashCode since equals is overridden, it's just
         hash = hash * 7 + 23 * stack.getAmount(); // too bad these are mutable values... Q_Q
+        for(Enchantment e : stack.getEnchantments().keySet())
+        {
+        	hash = hash ^ e.hashCode();
+        	hash = hash * (11 + 17 * stack.getEnchantmentLevel(e));
+        }
         return hash;
     }
     public ItemStack get()
