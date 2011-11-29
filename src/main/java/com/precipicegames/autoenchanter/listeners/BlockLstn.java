@@ -3,6 +3,7 @@ package com.precipicegames.autoenchanter.listeners;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -25,10 +26,13 @@ public class BlockLstn extends BlockListener {
 		ConfigurationSection extended = subc.getConfigurationSection(event.getBlock().getType().toString());
 		if(extended != null)	
 		{
-			Configuration conf = new MemoryConfiguration();
+			ConfigurationSection conf = new YamlConfiguration();
 			for(String setting : subc.getKeys(true))
 			{
-				conf.set(setting, subc.get(setting));
+				Object obj = subc.get(setting);
+				if(obj instanceof ConfigurationSection)
+					continue;
+				conf.set(setting, obj);
 			}
 			for(String setting : extended.getKeys(true))
 			{

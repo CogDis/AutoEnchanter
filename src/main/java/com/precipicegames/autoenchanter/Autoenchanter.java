@@ -108,13 +108,6 @@ public class Autoenchanter extends JavaPlugin{
 		Double levelup = subc.getDouble("levelRequirement",10);
 		
 		
-		System.out.println(this + " We have a working event!\n" + rate);
-		System.out.println(levelratefactor);
-		System.out.println(levelcurvefactor);
-		System.out.println(levelup);
-		System.out.println(maxlevel);
-		
-		
 		if(item.get().getEnchantmentLevel(e) >= maxlevel)
 			return;
 
@@ -131,7 +124,6 @@ public class Autoenchanter extends JavaPlugin{
 		double lvl = item.get().getEnchantmentLevel(e);
 		//double newlevel = new Double(trackedlevel + rate - (rate * ((rate*lvl+1)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl+1))));
 		Double newlevel = new Double(trackedlevel + rate);
-		System.out.println("old level: " + trackedlevel + " new level: " + newlevel);
 		if(newlevel >= levelup + Math.pow(lvl,levelcurvefactor)*levelratefactor)
 		{
 			trackedItems.get(player).get(item).remove(e);
@@ -141,13 +133,11 @@ public class Autoenchanter extends JavaPlugin{
 			else
 				item.get().addEnchantment(e, item.get().getEnchantmentLevel(e) + 1);
 			
-			player.sendMessage(ChatColor.GREEN + "Congrats you have leveled up an Item!");
+			player.sendMessage(ChatColor.GREEN + "Congratulations, you have leveled up an Item!");
 		}
 		else
 		{
 			trackedItems.get(player).get(item).put(e, newlevel);
-			System.out.println("saved level: " + trackedItems.get(player).get(item).get(e));
-			System.out.println("amount of items: " + trackedItems.get(player).size() + " hashcode: " + item.hashCode());
 		}
 		return;
     }
