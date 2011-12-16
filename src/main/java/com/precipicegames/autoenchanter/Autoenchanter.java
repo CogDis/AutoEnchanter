@@ -93,6 +93,9 @@ public class Autoenchanter extends JavaPlugin{
     {
     	if(subc == null)
     		return;
+    	
+
+    	
 		UniqueItem item = new UniqueItem(I);
 		String EnchantName = subc.getString("enchant");
 		if(EnchantName == null)
@@ -106,6 +109,9 @@ public class Autoenchanter extends JavaPlugin{
 		Double levelratefactor = subc.getDouble("levelFactor",0.1);
 		Double levelcurvefactor = subc.getDouble("levelCurveFactor",2);
 		Double levelup = subc.getDouble("levelRequirement",10);
+		String requiredPermission = subc.getString("permission","autoenchanter.level");
+		if(!player.hasPermission(requiredPermission))
+			return;
 		
 		
 		if(item.get().getEnchantmentLevel(e) >= maxlevel)
