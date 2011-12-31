@@ -16,37 +16,36 @@ public class BlockLstn extends BlockListener {
 	}
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		if(event.isCancelled())
+		if(event.isCancelled()) {
 			return;
+		}
 		ConfigurationSection subc = this.plugin.basicConfigurationHandler("BlockBreakEvent", event.getPlayer(), event.getPlayer().getItemInHand().getType());
-		if(subc == null)
+		if(subc == null) {
 			return;
+		}
 		ConfigurationSection extended = subc.getConfigurationSection(event.getBlock().getType().toString());
-		if(extended != null)	
-		{
+		if(extended != null) {
 			ConfigurationSection conf = new YamlConfiguration();
-			for(String setting : subc.getKeys(true))
-			{
+			for(String setting : subc.getKeys(true)) {
 				Object obj = subc.get(setting);
 				if(obj instanceof ConfigurationSection)
 					continue;
 				conf.set(setting, obj);
 			}
-			for(String setting : extended.getKeys(true))
-			{
+			for(String setting : extended.getKeys(true)) {
 				conf.set(setting, extended.get(setting));
 			}
 			this.plugin.basicActionHandler(conf, event.getPlayer(), event.getPlayer().getItemInHand());
 		}
-		else
-		{
+		else {
 			this.plugin.basicActionHandler(subc, event.getPlayer(), event.getPlayer().getItemInHand());
 		}
 	}
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		if(event.isCancelled())
+		if(event.isCancelled()) {
 			return;
+		}
 		ConfigurationSection subc = this.plugin.basicConfigurationHandler("BlockPlaceEvent", event.getPlayer(), event.getPlayer().getItemInHand().getType());
 		
 		this.plugin.basicActionHandler(subc, event.getPlayer(), event.getPlayer().getItemInHand());

@@ -91,18 +91,18 @@ public class Autoenchanter extends JavaPlugin{
     
     public void basicActionHandler(ConfigurationSection subc, Player player, ItemStack I)
     {
-    	if(subc == null)
+    	if(subc == null) {
     		return;
-    	
-
+    	}
     	
 		UniqueItem item = new UniqueItem(I);
 		String EnchantName = subc.getString("enchant");
 		if(EnchantName == null)
 			return;
 		Enchantment e = Enchantment.getByName(EnchantName);
-		if(e == null)
+		if(e == null) {
 			return;
+		}
 		boolean unsafe = subc.getBoolean("unsafe", false);
 		int maxlevel = subc.getInt("maxLevel", e.getMaxLevel());
 		Double rate = subc.getDouble("rate",0.1);
@@ -110,28 +110,31 @@ public class Autoenchanter extends JavaPlugin{
 		Double levelcurvefactor = subc.getDouble("levelCurveFactor",2);
 		Double levelup = subc.getDouble("levelRequirement",10);
 		String requiredPermission = subc.getString("permission","autoenchanter.level");
-		if(!player.hasPermission(requiredPermission))
+		if(!player.hasPermission(requiredPermission)) {
 			return;
+		}
 		
-		
-		if(item.get().getEnchantmentLevel(e) >= maxlevel)
+		if(item.get().getEnchantmentLevel(e) >= maxlevel) {
 			return;
+		}
 
-		if(!trackedItems.containsKey(player))
+		if(!trackedItems.containsKey(player)) {
 			trackedItems.put(player, new ItemStatus());
+		}
 		
-		if(!trackedItems.get(player).containsKey(item))
+		if(!trackedItems.get(player).containsKey(item)) {
 			trackedItems.get(player).put(item, new EnchantDetails());
+		}
 		
-		if(!trackedItems.get(player).get(item).containsKey(e))
+		if(!trackedItems.get(player).get(item).containsKey(e)) {
 			trackedItems.get(player).get(item).put(e, new Double(0.0));
+		}
 		
 		Double trackedlevel = trackedItems.get(player).get(item).get(e);
 		double lvl = item.get().getEnchantmentLevel(e);
 		//double newlevel = new Double(trackedlevel + rate - (rate * ((rate*lvl+1)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl+1))));
 		Double newlevel = new Double(trackedlevel + rate);
-		if(newlevel >= levelup + Math.pow(lvl,levelcurvefactor)*levelratefactor)
-		{
+		if(newlevel >= levelup + Math.pow(lvl,levelcurvefactor)*levelratefactor) {
 			trackedItems.get(player).get(item).remove(e);
 			
 			if(unsafe)
@@ -141,8 +144,7 @@ public class Autoenchanter extends JavaPlugin{
 			
 			player.sendMessage(ChatColor.GREEN + "Congratulations, you have leveled up an Item!");
 		}
-		else
-		{
+		else {
 			trackedItems.get(player).get(item).put(e, newlevel);
 		}
 		return;
