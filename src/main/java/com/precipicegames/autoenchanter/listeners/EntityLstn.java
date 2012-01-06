@@ -19,6 +19,8 @@ public class EntityLstn extends EntityListener {
 	}
 	public void onEntityDamage(EntityDamageEvent event) 
 	{
+		if(event.isCancelled())
+			return;
 		if(event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
 			Player invloved;
