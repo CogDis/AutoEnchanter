@@ -2,7 +2,7 @@ author: Precipicegames
 database: false
 description: Plugin to automatically level items based on activity
 generator: http://dinnerbone.com/minecraft/tools/pluginator/
-main: com.precipicegames.autoenchanter.Autoenchanter
+main: com.precipicegames.autoenchanter.AutoEnchanter
 name: AutoEnchanter
 startup: postworld
 url: http://precipicegames.com/
