@@ -38,6 +38,9 @@ public class EntityLstn extends EntityListener {
 					if(klass.getSimpleName().isEmpty()) {
 						continue;
 					}
+					if(plugin.debug) {
+						System.out.println(this + "[DEBUG] searching config for " + klass.getSimpleName());
+					}
 					if(c.isConfigurationSection(klass.getSimpleName()))	{
 						extended = c.getConfigurationSection(klass.getSimpleName());
 						break;
