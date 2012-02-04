@@ -6,4 +6,4 @@ main: com.precipicegames.autoenchanter.Autoenchanter
 name: AutoEnchanter
 startup: postworld
 url: http://precipicegames.com/
-version: '1.0'
+version: '1.1'
