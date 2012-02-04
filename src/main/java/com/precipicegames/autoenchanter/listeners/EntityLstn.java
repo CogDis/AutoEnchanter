@@ -23,9 +23,12 @@ public class EntityLstn extends EntityListener {
 			return;
 		if(event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
-			Player invloved;
-			if(entityEvent.getDamager() instanceof Player && entityEvent.getEntity() instanceof LivingEntity) {
-				invloved = (Player) entityEvent.getDamager();
+			Entity dealer = entityEvent.getDamager();
+			if(dealer instanceof Projectile) {
+				dealer = ((Projectile) dealer).getShooter();
+			}
+			if(dealer instanceof Player && entityEvent.getEntity() instanceof LivingEntity) {
+				Player invloved = (Player) entityEvent.getDamager();
 				ConfigurationSection c = plugin.basicConfigurationHandler("DealDamageEvent", invloved , invloved.getItemInHand().getType());
 				ConfigurationSection extended = null;
 				for(Class<?> klass = event.getClass(); klass != null; klass = klass.getSuperclass()) {
