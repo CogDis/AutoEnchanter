@@ -27,6 +27,7 @@ import com.precipicegames.autoenchanter.listeners.PlayerLstn;
 public class Autoenchanter extends JavaPlugin{
     public YamlConfiguration config;
     public HashMap<Player, ItemStatus> trackedItems;
+	public boolean debug;
     
 	public void onDisable() {
         // TODO: Place any custom disable code here.
@@ -58,6 +59,7 @@ public class Autoenchanter extends JavaPlugin{
 			e.printStackTrace();
 		}
 		
+		debug = config.getBoolean("debug", false);
 		trackedItems = new HashMap<Player, ItemStatus>();
 		
 		

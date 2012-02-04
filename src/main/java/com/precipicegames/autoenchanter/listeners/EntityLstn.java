@@ -30,8 +30,11 @@ public class EntityLstn extends EntityListener {
 			if(dealer instanceof Player && entityEvent.getEntity() instanceof LivingEntity) {
 				Player invloved = (Player) entityEvent.getDamager();
 				ConfigurationSection c = plugin.basicConfigurationHandler("DealDamageEvent", invloved , invloved.getItemInHand().getType());
+				if(c == null) {
+					return;
+				}
 				ConfigurationSection extended = null;
-				for(Class<?> klass = event.getClass(); klass != null; klass = klass.getSuperclass()) {
+				for(Class<?> klass = event.getEntity().getClass(); klass != null; klass = klass.getSuperclass()) {
 					if(klass.getSimpleName().isEmpty()) {
 						continue;
 					}
