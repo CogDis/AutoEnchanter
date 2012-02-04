@@ -25,7 +25,7 @@ public class UniqueItem {
 
         hash = hash * 19 + 7 * stack.getTypeId(); // Overriding hashCode since equals is overridden, it's just
         hash = hash * 7 + 23 * stack.getAmount(); // too bad these are mutable values... Q_Q
-        System.out.println("DATA: " + stack.getTypeId() + " : " + stack.getAmount() + " : " + hash);
+        //System.out.println("DATA: " + stack.getTypeId() + " : " + stack.getAmount() + " : " + hash);
         
         for(Enchantment e : stack.getEnchantments().keySet())
         {
