@@ -2,18 +2,21 @@ package com.precipicegames.autoenchanter.listeners;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.precipicegames.autoenchanter.Autoenchanter;
 
-public class BlockLstn extends BlockListener {
-	private Autoenchanter plugin;
+public class BlockLstn implements Listener {
+	private final Autoenchanter plugin;
 	public BlockLstn(Autoenchanter p)
 	{
 		plugin = p;
 	}
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		if(event.isCancelled()) {
@@ -41,6 +44,7 @@ public class BlockLstn extends BlockListener {
 			this.plugin.basicActionHandler(subc, event.getPlayer(), event.getPlayer().getItemInHand());
 		}
 	}
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		if(event.isCancelled()) {

@@ -2,21 +2,28 @@ package com.precipicegames.autoenchanter.listeners;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
+
 import com.precipicegames.autoenchanter.Autoenchanter;
 
 
-public class EntityLstn extends EntityListener {
+public class EntityLstn implements Listener {
 	
-	private Autoenchanter plugin;
+	private final Autoenchanter plugin;
 
 	public EntityLstn(Autoenchanter p)
 	{
 		plugin = p;
 	}
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamage(EntityDamageEvent event) 
 	{
 		if(event.isCancelled())

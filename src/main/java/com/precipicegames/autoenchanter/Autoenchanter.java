@@ -5,20 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.event.Listener;
-
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.precipicegames.autoenchanter.listeners.BlockLstn;
 import com.precipicegames.autoenchanter.listeners.EntityLstn;
@@ -67,12 +63,15 @@ public class Autoenchanter extends JavaPlugin{
 		Listener block = new BlockLstn(this);
 		Listener plListen = new PlayerLstn(this);
 		Listener eListen = new EntityLstn(this);
-    	this.getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, block , Priority.Monitor,this);
-    	this.getServer().getPluginManager().registerEvent(Type.BLOCK_PLACE, block , Priority.Monitor,this);
-    	//this.getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, plListen , Priority.Monitor,this);
+    	/*this.getServer().getPluginManager().registerEvent(Type.BLOCK_BREAK, block , Priority.Monitor,this);
+	this.getServer().getPluginManager().registerEvent(Type.BLOCK_PLACE, block , Priority.Monitor,this);
+	//this.getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, plListen , Priority.Monitor,this);
     	this.getServer().getPluginManager().registerEvent(Type.ENTITY_DAMAGE, eListen , Priority.Monitor,this);
-    	this.getServer().getPluginManager().registerEvent(Type.PLAYER_PICKUP_ITEM, plListen , Priority.Monitor,this);
-    	this.getServer().getPluginManager().registerEvent(Type.PLAYER_FISH, plListen , Priority.Monitor,this);
+	this.getServer().getPluginManager().registerEvent(Type.PLAYER_PICKUP_ITEM, plListen , Priority.Monitor,this);
+	this.getServer().getPluginManager().registerEvent(Type.PLAYER_FISH, plListen , Priority.Monitor,this);*/
+	this.getServer().getPluginManager().registerEvents(block, this);
+    	this.getServer().getPluginManager().registerEvents(eListen, this);
+    	this.getServer().getPluginManager().registerEvents(plListen, this);
     	
     	
         System.out.println(this + " is now enabled!");
