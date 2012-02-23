@@ -24,6 +24,7 @@ public class Autoenchanter extends JavaPlugin{
     public YamlConfiguration config;
     public HashMap<Player, ItemStatus> trackedItems;
 	public boolean debug;
+	private boolean enabledChance;
     
 	public void onDisable() {
         // TODO: Place any custom disable code here.
@@ -57,7 +58,7 @@ public class Autoenchanter extends JavaPlugin{
 		
 		debug = config.getBoolean("debug", false);
 		trackedItems = new HashMap<Player, ItemStatus>();
-		
+		enabledChance = config.getBoolean("chance", false);
 		
 		//Register Block break event
 		Listener block = new BlockLstn(this);
@@ -118,35 +119,42 @@ public class Autoenchanter extends JavaPlugin{
 		if(item.get().getEnchantmentLevel(e) >= maxlevel) {
 			return;
 		}
-
-		if(!trackedItems.containsKey(player)) {
-			trackedItems.put(player, new ItemStatus());
-		}
-		
-		if(!trackedItems.get(player).containsKey(item)) {
-			trackedItems.get(player).put(item, new EnchantDetails());
-		}
-		
-		if(!trackedItems.get(player).get(item).containsKey(e)) {
-			trackedItems.get(player).get(item).put(e, new Double(0.0));
-		}
-		
-		Double trackedlevel = trackedItems.get(player).get(item).get(e);
 		double lvl = item.get().getEnchantmentLevel(e);
-		//double newlevel = new Double(trackedlevel + rate - (rate * ((rate*lvl+1)/(levelratefactor*Math.pow(lvl,levelcurvefactor) + rate*lvl+1))));
-		Double newlevel = new Double(trackedlevel + rate);
-		if(newlevel >= levelup + Math.pow(lvl,levelcurvefactor)*levelratefactor) {
-			trackedItems.get(player).get(item).remove(e);
+		boolean doLevelUp = false;
+		if(enabledChance) {
+			double chance = rate/(Math.pow(lvl,levelcurvefactor)*levelratefactor);
+			if(Math.random() < chance) {
+				doLevelUp = true;
+			}
+		} else {
+			if(!trackedItems.containsKey(player)) {
+				trackedItems.put(player, new ItemStatus());
+			}
 			
+			if(!trackedItems.get(player).containsKey(item)) {
+				trackedItems.get(player).put(item, new EnchantDetails());
+			}
+			
+			if(!trackedItems.get(player).get(item).containsKey(e)) {
+				trackedItems.get(player).get(item).put(e, new Double(0.0));
+			}
+			
+			Double trackedlevel = trackedItems.get(player).get(item).get(e);
+			Double newlevel = new Double(trackedlevel + rate);
+			if(newlevel >= levelup + Math.pow(lvl,levelcurvefactor)*levelratefactor) {
+				doLevelUp = true;
+				trackedItems.get(player).get(item).remove(e);
+			} else {
+				trackedItems.get(player).get(item).put(e, newlevel);
+			}
+		}		
+		if(doLevelUp) {
 			if(unsafe)
 				item.get().addUnsafeEnchantment(e, item.get().getEnchantmentLevel(e) + 1);
 			else
 				item.get().addEnchantment(e, item.get().getEnchantmentLevel(e) + 1);
 			
 			player.sendMessage(ChatColor.GREEN + "Congratulations, you have leveled up an Item!");
-		}
-		else {
-			trackedItems.get(player).get(item).put(e, newlevel);
 		}
 		return;
     }
