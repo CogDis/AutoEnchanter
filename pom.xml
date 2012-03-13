@@ -5,6 +5,19 @@
     <version>1.1.1</version>
     <name>AutoEnchanter</name>
     <url>http://precipicegames.com/</url>
+    <distributionManagement>
+        <!-- use the following if you're not using a snapshot version. -->
+        <repository>
+            <id>repo.precipicegames.com</id>
+            <url>http://repo.precipicegames.com/content/repositories/releases</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>repo.precipicegames.com</id>
+            <url>http://repo.precipicegames.com/content/repositories/snapshots</url>
+        </snapshotRepository>
+
+    </distributionManagement>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
